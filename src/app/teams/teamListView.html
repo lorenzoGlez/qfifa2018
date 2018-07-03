@@ -57,7 +57,7 @@
             <td>{{owner.goalsDifference}}</td>
             <td>{{owner.points}}</td>
         </tr>
-            <tr ng-show="owner.showTeams" ng-repeat="team in owner.teamList | orderBy:['-points','-goals']">
+            <tr ng-show="owner.showTeams" ng-repeat="team in owner.teamList | orderBy:['-points','-goals']"> 
                 <td>
                     <img ng-if="vm.showImage"
                          ng-src="{{product.imageUrl}}"
@@ -65,8 +65,8 @@
                          title="{{product.productName}}">
                 </td>
                 <td>{{team.group}}</td>
-                <td>
-                        {{ team.team}}
+                <td  ng-class="{'bg-success': team.rank>0}" ng-style="{'text-decoration':{true: 'line-through', false: ''}[team.eliminated]}">
+                        {{ team.team}} 
 
                 </td>
                 <td>{{team.playedGames}}</td>
@@ -79,6 +79,7 @@
                 <td>{{team.points}}</td>
             </tr>
         <tr ng-repeat-end></tr>
+       
             </tbody>
         </table>
     </div>
