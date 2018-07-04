@@ -28,7 +28,7 @@
                 </td>
                 <td>{{ game.status }}</td>
                 <td class="text-right" ng-style="(game.result.goalsHomeTeam > game.result.goalsAwayTeam) ? {'font-weight':'bold'}:{}"><div class="badge">{{game.homeOwner}}</div>   {{ game.homeTeamName }}</td>
-                <td class="text-center">{{ game.result.goalsHomeTeam + game.result.extraTime.goalsHomeTeam }}<sup class="btn-primary">{{ game.result.penaltyShootout.goalsHomeTeam }}</sup> - {{ game.result.goalsAwayTeam + game.result.extraTime.goalsAwayTeam}}<sup class="btn-primary">{{ game.result.penaltyShootout.goalsAwayTeam}}</sup></td>
+                <td class="text-center">{{ game.result.goalsHomeTeam + game.result.extraTime.goalsHomeTeam }}<sup><sup>{{ game.result.penaltyShootout.goalsHomeTeam }}</sup></sup> - {{ game.result.goalsAwayTeam + game.result.extraTime.goalsAwayTeam}}<sup><sup>{{ game.result.penaltyShootout.goalsAwayTeam}}</sup></sup></td>
                 <td ng-style="(game.result.goalsHomeTeam < game.result.goalsAwayTeam) ? {'font-weight':'bold'}:{}">{{ game.awayTeamName }}   <div class="badge">{{game.awayOwner}}</div> </td>
             </tr>
             </tbody>

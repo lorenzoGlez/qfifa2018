@@ -43,8 +43,7 @@
                     <a class="btn" ng-click="vm.toggleShowTeams(owner)"> {{owner.ownerName}} </a>
                 </div>
                 <div style="float: right;">
-                    <i class="text-muted">{{owner.nextGame.myTeam}} vs
-                        {{owner.nextGame.vsTeam}}</i>
+                    <i class="text-muted">{{owner.nextGame.myTeam + (owner.nextGame.myTeam ? ' vs ' : '') }}{{owner.nextGame.vsTeam}}</i>
                     <i class="badge">{{owner.nextGame.vsOwner}}</i>
                     <i class="text-muted">{{owner.nextGame.date | date: "EEE HH:mm"}}</i>
                 </div>
