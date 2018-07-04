@@ -384,13 +384,15 @@ module app.teamList{
         private updateTeamStats(homeTeam: ITeam, awayTeam:ITeam, game: IGame):void{
             if (game.status != "TIMED"){
                 homeTeam.eliminated  = awayTeam.eliminated = false;
-                if(game.result.goalsHomeTeam > game.result.goalsAwayTeam){
+                game.result.extraTime = game.result.extraTime ? game.result.extraTime : new IResult();
+                game.result.penaltyShootout = game.result.penaltyShootout ? game.result.penaltyShootout : new IResult();
+                if(this.getHomeGoalsTotal(game) > this.getAwayGoalsTotal(game)){
                     homeTeam.wonGames ? homeTeam.wonGames++: homeTeam.wonGames = 1;
                     awayTeam.lostGames ? awayTeam.lostGames++: awayTeam.lostGames = 1;
                     homeTeam.points += 3;
                     awayTeam.eliminated = awayTeam.playedGames > 3;
                 }else{
-                    if (game.result.goalsAwayTeam > game.result.goalsHomeTeam){
+                    if (this.getAwayGoalsTotal(game) > this.getHomeGoalsTotal(game)){
                         awayTeam.wonGames ? awayTeam.wonGames++: awayTeam.wonGames = 1;
                         homeTeam.lostGames ? homeTeam.lostGames++: homeTeam.lostGames = 1;
                         awayTeam.points += 3;
@@ -404,17 +406,28 @@ module app.teamList{
                 }
                 
                 homeTeam.playedGames++;
-                homeTeam.goals += game.result.goalsHomeTeam;
-                homeTeam.goalsAgainst += game.result.goalsAwayTeam;
+                homeTeam.goals += game.result.goalsHomeTeam + Common.getZeroIfNull(game.result.extraTime.goalsHomeTeam);
+                homeTeam.goalsAgainst += game.result.goalsAwayTeam + Common.getZeroIfNull(game.result.extraTime.goalsAwayTeam);
                 homeTeam.goalDifference = homeTeam.goals - homeTeam.goalsAgainst;
                 
 
                 awayTeam.playedGames++;
-                awayTeam.goals += game.result.goalsAwayTeam;
-                awayTeam.goalsAgainst += game.result.goalsHomeTeam;
+                awayTeam.goals += game.result.goalsAwayTeam + Common.getZeroIfNull(game.result.extraTime.goalsAwayTeam);
+                awayTeam.goalsAgainst += game.result.goalsHomeTeam + Common.getZeroIfNull(game.result.extraTime.goalsHomeTeam);
                 awayTeam.goalDifference = awayTeam.goals - awayTeam.goalsAgainst;
 
             }
+        }
+
+        private getHomeGoalsTotal(game: IGame){
+            return game.result.goalsHomeTeam +
+                   Common.getZeroIfNull(game.result.extraTime.goalsHomeTeam) +
+                   Common.getZeroIfNull(game.result.penaltyShootout.goalsHomeTeam);
+        }
+        private getAwayGoalsTotal(game: IGame){
+            return game.result.goalsAwayTeam + 
+                   Common.getZeroIfNull(game.result.extraTime.goalsAwayTeam) +
+                   Common.getZeroIfNull(game.result.penaltyShootout.goalsAwayTeam);
         }
 
         getTotalTeams():number{

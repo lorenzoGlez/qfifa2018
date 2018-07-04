@@ -1,6 +1,6 @@
 var app;
 (function (app) {
-    var main = angular.module("fifa", ["chart.js", "ngRoute", "services", "ngResource"]);
+    var main = angular.module("fifa", ["chart.js", "ngRoute", "services"]);
     main.config(routeConfig);
     function routeConfig($routeProvider) {
         $routeProvider

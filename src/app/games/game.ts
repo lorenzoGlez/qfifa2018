@@ -22,10 +22,16 @@ module app{
         awayOwner: string;
         result: {
             goalsHomeTeam: number,
-            goalsAwayTeam: number
+            goalsAwayTeam: number,
+            extraTime: IResult,
+            penaltyShootout: IResult
         }
     }
     
+    export class IResult{
+        goalsHomeTeam: number;
+        goalsAwayTeam: number;
+    }
 
     export class Game implements IGame {
         

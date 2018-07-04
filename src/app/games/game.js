@@ -12,6 +12,12 @@ var app;
         return IGame;
     }());
     app.IGame = IGame;
+    var IResult = /** @class */ (function () {
+        function IResult() {
+        }
+        return IResult;
+    }());
+    app.IResult = IResult;
     var Game = /** @class */ (function () {
         function Game(self, date, status, homeTeamName, awayTeamName, homeOwner, awayOwner, result) {
             this.self = self;

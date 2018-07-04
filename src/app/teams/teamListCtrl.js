@@ -17,23 +17,19 @@ var app;
                 this.title = "Estadísticas";
                 this.teams = [];
                 this.price = this.$routeParams.price ? this.$routeParams.price : 400;
-                var preferencesResource = dataAccessService.getPreferencesResource();
-                preferencesResource.get(function (dataPreferences) {
-                    _this.preferences = dataPreferences;
-                    var teamResource = dataAccessService.getTeamResource();
-                    teamResource.get(function (data) {
-                        _this.teams = data.standings.A;
-                        _this.teams = _this.teams.concat(data.standings.B);
-                        _this.teams = _this.teams.concat(data.standings.C);
-                        _this.teams = _this.teams.concat(data.standings.D);
-                        _this.teams = _this.teams.concat(data.standings.E);
-                        _this.teams = _this.teams.concat(data.standings.F);
-                        _this.teams = _this.teams.concat(data.standings.G);
-                        _this.teams = _this.teams.concat(data.standings.H);
-                        console.log("Standings retrieved");
-                    });
-                    _this.getGamesRaults(dataAccessService, _this.games);
+                var teamResource = dataAccessService.getTeamResource();
+                teamResource.get(function (data) {
+                    _this.teams = data.standings.A;
+                    _this.teams = _this.teams.concat(data.standings.B);
+                    _this.teams = _this.teams.concat(data.standings.C);
+                    _this.teams = _this.teams.concat(data.standings.D);
+                    _this.teams = _this.teams.concat(data.standings.E);
+                    _this.teams = _this.teams.concat(data.standings.F);
+                    _this.teams = _this.teams.concat(data.standings.G);
+                    _this.teams = _this.teams.concat(data.standings.H);
+                    console.log("Standings retrieved");
                 });
+                this.getGamesRaults(dataAccessService, this.games);
                 app.Common.setButtonsReferences(this.price);
             }
             TeamListCtrl.prototype.getGamesRaults = function (dataAccessService, games) {
@@ -51,7 +47,7 @@ var app;
             TeamListCtrl.prototype.combineFixData = function (replaceWholeFixData) {
                 var _this = this;
                 if (replaceWholeFixData === void 0) { replaceWholeFixData = false; }
-                var gameFixedResource = this.dataAccessService.getGameFixedResource(this.preferences.backupURL);
+                var gameFixedResource = this.dataAccessService.getGameFixedResource();
                 gameFixedResource.get(function (dataFixed) {
                     if (replaceWholeFixData) {
                         _this.games = dataFixed.fixtures;
@@ -331,14 +327,16 @@ var app;
             TeamListCtrl.prototype.updateTeamStats = function (homeTeam, awayTeam, game) {
                 if (game.status != "TIMED") {
                     homeTeam.eliminated = awayTeam.eliminated = false;
-                    if (game.result.goalsHomeTeam > game.result.goalsAwayTeam) {
+                    game.result.extraTime = game.result.extraTime ? game.result.extraTime : new app.IResult();
+                    game.result.penaltyShootout = game.result.penaltyShootout ? game.result.penaltyShootout : new app.IResult();
+                    if (this.getHomeGoalsTotal(game) > this.getAwayGoalsTotal(game)) {
                         homeTeam.wonGames ? homeTeam.wonGames++ : homeTeam.wonGames = 1;
                         awayTeam.lostGames ? awayTeam.lostGames++ : awayTeam.lostGames = 1;
                         homeTeam.points += 3;
                         awayTeam.eliminated = awayTeam.playedGames > 3;
                     }
                     else {
-                        if (game.result.goalsAwayTeam > game.result.goalsHomeTeam) {
+                        if (this.getAwayGoalsTotal(game) > this.getHomeGoalsTotal(game)) {
                             awayTeam.wonGames ? awayTeam.wonGames++ : awayTeam.wonGames = 1;
                             homeTeam.lostGames ? homeTeam.lostGames++ : homeTeam.lostGames = 1;
                             awayTeam.points += 3;
@@ -352,14 +350,24 @@ var app;
                         }
                     }
                     homeTeam.playedGames++;
-                    homeTeam.goals += game.result.goalsHomeTeam;
-                    homeTeam.goalsAgainst += game.result.goalsAwayTeam;
+                    homeTeam.goals += game.result.goalsHomeTeam + app.Common.getZeroIfNull(game.result.extraTime.goalsHomeTeam);
+                    homeTeam.goalsAgainst += game.result.goalsAwayTeam + app.Common.getZeroIfNull(game.result.extraTime.goalsAwayTeam);
                     homeTeam.goalDifference = homeTeam.goals - homeTeam.goalsAgainst;
                     awayTeam.playedGames++;
-                    awayTeam.goals += game.result.goalsAwayTeam;
-                    awayTeam.goalsAgainst += game.result.goalsHomeTeam;
+                    awayTeam.goals += game.result.goalsAwayTeam + app.Common.getZeroIfNull(game.result.extraTime.goalsAwayTeam);
+                    awayTeam.goalsAgainst += game.result.goalsHomeTeam + app.Common.getZeroIfNull(game.result.extraTime.goalsHomeTeam);
                     awayTeam.goalDifference = awayTeam.goals - awayTeam.goalsAgainst;
                 }
+            };
+            TeamListCtrl.prototype.getHomeGoalsTotal = function (game) {
+                return game.result.goalsHomeTeam +
+                    app.Common.getZeroIfNull(game.result.extraTime.goalsHomeTeam) +
+                    app.Common.getZeroIfNull(game.result.penaltyShootout.goalsHomeTeam);
+            };
+            TeamListCtrl.prototype.getAwayGoalsTotal = function (game) {
+                return game.result.goalsAwayTeam +
+                    app.Common.getZeroIfNull(game.result.extraTime.goalsAwayTeam) +
+                    app.Common.getZeroIfNull(game.result.penaltyShootout.goalsAwayTeam);
             };
             TeamListCtrl.prototype.getTotalTeams = function () {
                 return this.teams.length;

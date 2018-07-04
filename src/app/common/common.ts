@@ -60,6 +60,8 @@ module app{
                             && gameFix.awayTeamName == game.awayTeamName){
                                 game.result.goalsAwayTeam = gameFix.result.goalsAwayTeam;
                                 game.result.goalsHomeTeam = gameFix.result.goalsHomeTeam;
+                                if(gameFix.result.extraTime){ game.result.extraTime = gameFix.result.extraTime; }
+                                if(gameFix.result.penaltyShootout){ game.result.penaltyShootout = gameFix.result.penaltyShootout; }
                                 game.status = gameFix.status;
                                 i = games.length;
                             }

@@ -47,11 +47,17 @@ var app;
                 .forEach(function (gameFix) {
                 for (var i = 0; i < gamesToFix.length; i++) {
                     var game = gamesToFix[i];
-                    if (gameFix.date.substring(0, 10) == game.date.substring(0, 10)
+                    if (gameFix.date == game.date
                         && gameFix.homeTeamName == game.homeTeamName
                         && gameFix.awayTeamName == game.awayTeamName) {
                         game.result.goalsAwayTeam = gameFix.result.goalsAwayTeam;
                         game.result.goalsHomeTeam = gameFix.result.goalsHomeTeam;
+                        if (gameFix.result.extraTime) {
+                            game.result.extraTime = gameFix.result.extraTime;
+                        }
+                        if (gameFix.result.penaltyShootout) {
+                            game.result.penaltyShootout = gameFix.result.penaltyShootout;
+                        }
                         game.status = gameFix.status;
                         i = games.length;
                     }
