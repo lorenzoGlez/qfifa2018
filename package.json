@@ -10,14 +10,13 @@
   "license": "ISC",
   "devDependencies": {
     "angular-chart.js": "^1.1.1",
-    "angular-mocks": "^1.7.2",
+    "angular-mocks": "^1.7.0",
     "jasmine": "^3.1.0",
-    "karma": "^2.0.3",
+    "karma": "^2.0.2",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.2"
   },
   "dependencies": {
-    "@types/angular": "^1.6.47",
-    "angular": "^1.7.2"
+    "@types/angular": "^1.6.45"
   }
 }

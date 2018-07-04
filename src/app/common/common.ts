@@ -55,7 +55,7 @@ module app{
                 .forEach((gameFix) => {
                     for (let i = 0; i < gamesToFix.length; i++) {
                         const game = gamesToFix[i];
-                        if (gameFix.date == game.date 
+                        if (gameFix.date.substring(0,10) == game.date.substring(0,10) 
                             && gameFix.homeTeamName == game.homeTeamName 
                             && gameFix.awayTeamName == game.awayTeamName){
                                 game.result.goalsAwayTeam = gameFix.result.goalsAwayTeam;

@@ -1,32 +1,31 @@
-[debug] [2018-06-17T06:06:52.498Z] ----------------------------------------------------------------------
-[debug] [2018-06-17T06:06:52.502Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\lgonzal1\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
-[debug] [2018-06-17T06:06:52.502Z] CLI Version:   3.18.6
-[debug] [2018-06-17T06:06:52.502Z] Platform:      win32
-[debug] [2018-06-17T06:06:52.502Z] Node Version:  v8.11.3
-[debug] [2018-06-17T06:06:52.503Z] Time:          Sun Jun 17 2018 00:06:52 GMT-0600 (Mountain Daylight Time (Mexico))
-[debug] [2018-06-17T06:06:52.503Z] ----------------------------------------------------------------------
+[debug] [2018-06-19T22:34:10.152Z] ----------------------------------------------------------------------
+[debug] [2018-06-19T22:34:10.157Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\lgonzale\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase login
+[debug] [2018-06-19T22:34:10.157Z] CLI Version:   3.18.6
+[debug] [2018-06-19T22:34:10.158Z] Platform:      win32
+[debug] [2018-06-19T22:34:10.158Z] Node Version:  v6.11.2
+[debug] [2018-06-19T22:34:10.159Z] Time:          Tue Jun 19 2018 16:34:10 GMT-0600 (Mountain Daylight Time (Mexico))
+[debug] [2018-06-19T22:34:10.160Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2018-06-17T06:06:52.520Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-06-17T06:06:52.522Z] > authorizing via signed-in user
-[debug] [2018-06-17T06:06:52.525Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/quiniela-fifa-2018  
-  
- Sun Jun 17 2018 00:06:52 GMT-0600 (Mountain Daylight Time (Mexico))
-[debug] [2018-06-17T06:06:53.079Z] <<< HTTP RESPONSE 200
-[debug] [2018-06-17T06:06:53.080Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/quiniela-fifa-2018/tokens  
-  
- Sun Jun 17 2018 00:06:53 GMT-0600 (Mountain Daylight Time (Mexico))
-[debug] [2018-06-17T06:06:53.669Z] <<< HTTP RESPONSE 200
-[debug] [2018-06-17T06:06:53.670Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/quiniela-fifa-2018  
-  
- Sun Jun 17 2018 00:06:53 GMT-0600 (Mountain Daylight Time (Mexico))
-[debug] [2018-06-17T06:06:55.983Z] <<< HTTP RESPONSE 200
 [info] 
-[info] === Serving from 'C:\DZ\Projects\Fifa2018'...
+[info] Visit this URL on any device to log in:
+[info] https://accounts.google.com/o/oauth2/auth?client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&scope=email%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloudplatformprojects.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ffirebase%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&state=288215342&redirect_uri=http%3A%2F%2Flocalhost%3A9005
 [info] 
-[debug] [2018-06-17T06:06:55.990Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/389850027858/clients/_:getWebAppConfig  
-  
- Sun Jun 17 2018 00:06:55 GMT-0600 (Mountain Daylight Time (Mexico))
-[debug] [2018-06-17T06:06:56.419Z] <<< HTTP RESPONSE 200
-[info] i  hosting: Serving hosting files from: dist
-[info] +  hosting: Local server: http://localhost:5000
-
+[info] Waiting for authentication...
+[debug] [2018-06-19T22:35:23.898Z] >>> HTTP REQUEST POST https://accounts.google.com/o/oauth2/token  
+ { code: '4/AAD87x9rLUgsLSshtszxYvdFir980g8jyIzjqHFYfar1Y_35Of1REgqy1yX5MeXvDr8-b6hjErvBMhYINkcD6R0',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  redirect_uri: 'http://localhost:9005',
+  grant_type: 'authorization_code' } 
+ Tue Jun 19 2018 16:35:23 GMT-0600 (Mountain Daylight Time (Mexico))
+[debug] [2018-06-19T22:35:25.251Z] Token Fetch Error: Error
+    at Error.FirebaseError (C:\Users\lgonzale\AppData\Roaming\npm\node_modules\firebase-tools\lib\error.js:11:16)
+    at Request._callback (C:\Users\lgonzale\AppData\Roaming\npm\node_modules\firebase-tools\lib\api.js:35:11)
+    at self.callback (C:\Users\lgonzale\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\request\request.js:185:22)
+    at emitOne (events.js:96:13)
+    at Request.emit (events.js:188:7)
+    at Request.onRequestError (C:\Users\lgonzale\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\request\request.js:877:8)
+    at emitOne (events.js:96:13)
+    at ClientRequest.emit (events.js:188:7)
+    at TLSSocket.socketErrorListener (_http_client.js:310:9)
+    at emitOne (events.js:96:13)
