@@ -17,19 +17,23 @@ var app;
                 this.title = "Estadísticas";
                 this.teams = [];
                 this.price = this.$routeParams.price ? this.$routeParams.price : 400;
-                var teamResource = dataAccessService.getTeamResource();
-                teamResource.get(function (data) {
-                    _this.teams = data.standings.A;
-                    _this.teams = _this.teams.concat(data.standings.B);
-                    _this.teams = _this.teams.concat(data.standings.C);
-                    _this.teams = _this.teams.concat(data.standings.D);
-                    _this.teams = _this.teams.concat(data.standings.E);
-                    _this.teams = _this.teams.concat(data.standings.F);
-                    _this.teams = _this.teams.concat(data.standings.G);
-                    _this.teams = _this.teams.concat(data.standings.H);
-                    console.log("Standings retrieved");
+                var preferencesResource = dataAccessService.getPreferencesResource();
+                preferencesResource.get(function (dataPreferences) {
+                    _this.preferences = dataPreferences;
+                    var teamResource = dataAccessService.getTeamResource();
+                    teamResource.get(function (data) {
+                        _this.teams = data.standings.A;
+                        _this.teams = _this.teams.concat(data.standings.B);
+                        _this.teams = _this.teams.concat(data.standings.C);
+                        _this.teams = _this.teams.concat(data.standings.D);
+                        _this.teams = _this.teams.concat(data.standings.E);
+                        _this.teams = _this.teams.concat(data.standings.F);
+                        _this.teams = _this.teams.concat(data.standings.G);
+                        _this.teams = _this.teams.concat(data.standings.H);
+                        console.log("Standings retrieved");
+                    });
+                    _this.getGamesRaults(dataAccessService, _this.games);
                 });
-                this.getGamesRaults(dataAccessService, this.games);
                 app.Common.setButtonsReferences(this.price);
             }
             TeamListCtrl.prototype.getGamesRaults = function (dataAccessService, games) {
@@ -47,7 +51,7 @@ var app;
             TeamListCtrl.prototype.combineFixData = function (replaceWholeFixData) {
                 var _this = this;
                 if (replaceWholeFixData === void 0) { replaceWholeFixData = false; }
-                var gameFixedResource = this.dataAccessService.getGameFixedResource();
+                var gameFixedResource = this.dataAccessService.getGameFixedResource(this.preferences.backupURL);
                 gameFixedResource.get(function (dataFixed) {
                     if (replaceWholeFixData) {
                         _this.games = dataFixed.fixtures;

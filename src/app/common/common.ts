@@ -50,7 +50,7 @@ module app{
         }
         
         static fixGames(gamesFixed: IGame[], games: IGame[]){
-            let gamesToFix = games.filter((game) => {return game.status != 'FINISHED';});
+            let gamesToFix = games.filter((game) => {return game.status != 'FINISHED' && game.status != 'SCHEDULED';});
             gamesFixed.filter((game) => {return game.status !='TIMED';})
                 .forEach((gameFix) => {
                     for (let i = 0; i < gamesToFix.length; i++) {

@@ -12,19 +12,23 @@ var app;
                 this.games = [];
                 this.price = this.$routeParams.price ? this.$routeParams.price : 400;
                 this.price = Math.abs(this.price);
-                var ownerResource = dataAccessService.getOwnerResource();
-                ownerResource.query(function (data) {
-                    _this.owners = data.filter(function (owner) {
-                        return owner.quiniela == _this.price;
-                    });
-                    var gameResource = dataAccessService.getGameResource();
-                    gameResource.get(function (data) {
-                        _this.games = data.fixtures;
-                    }).$promise.then(function (value) {
-                        _this.combineFixData();
-                    }).catch(function (error) {
-                        _this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
-                        _this.combineFixData(true);
+                var preferencesResource = dataAccessService.getPreferencesResource();
+                preferencesResource.get(function (dataPreferences) {
+                    _this.preferences = dataPreferences;
+                    var ownerResource = dataAccessService.getOwnerResource();
+                    ownerResource.query(function (data) {
+                        _this.owners = data.filter(function (owner) {
+                            return owner.quiniela == _this.price;
+                        });
+                        var gameResource = dataAccessService.getGameResource();
+                        gameResource.get(function (data) {
+                            _this.games = data.fixtures;
+                        }).$promise.then(function (value) {
+                            _this.combineFixData();
+                        }).catch(function (error) {
+                            _this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
+                            _this.combineFixData(true);
+                        });
                     });
                 });
                 app.Common.setButtonsReferences(this.price);
@@ -32,7 +36,7 @@ var app;
             GameListCtrl.prototype.combineFixData = function (replaceWholeFixData) {
                 var _this = this;
                 if (replaceWholeFixData === void 0) { replaceWholeFixData = false; }
-                var gameFixedResource = this.dataAccessService.getGameFixedResource();
+                var gameFixedResource = this.dataAccessService.getGameFixedResource(this.preferences.backupURL);
                 gameFixedResource.get(function (dataFixed) {
                     if (replaceWholeFixData) {
                         _this.games = dataFixed.fixtures;
@@ -57,6 +61,7 @@ var app;
             GameListCtrl.$inject = ["$routeParams", "dataAccessService"];
             return GameListCtrl;
         }());
+        gameList.GameListCtrl = GameListCtrl;
         angular.module("fifa").controller("GameListCtrl", GameListCtrl);
     })(gameList = app.gameList || (app.gameList = {}));
 })(app || (app = {}));
