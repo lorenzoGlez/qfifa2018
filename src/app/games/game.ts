@@ -46,7 +46,9 @@ module app{
                      public awayOwner: string,                     
                      public result: {
                         goalsHomeTeam: number,
-                        goalsAwayTeam: number}){
+                        goalsAwayTeam: number,
+                        extraTime: IResult,
+                        penaltyShootout: IResult}){
             
             this.getId = this.self.href.match(/([^\/]*)\/*$/)[1];
         }

@@ -17,52 +17,27 @@ var app;
                 this.title = "Estadísticas";
                 this.teams = [];
                 this.price = this.$routeParams.price ? this.$routeParams.price : 400;
-                var preferencesResource = dataAccessService.getPreferencesResource();
-                preferencesResource.get(function (dataPreferences) {
+                app.Promises.getPreferences(dataAccessService).then(function (dataPreferences) {
                     _this.preferences = dataPreferences;
-                    var teamResource = dataAccessService.getTeamResource();
-                    teamResource.get(function (data) {
-                        _this.teams = data.standings.A;
-                        _this.teams = _this.teams.concat(data.standings.B);
-                        _this.teams = _this.teams.concat(data.standings.C);
-                        _this.teams = _this.teams.concat(data.standings.D);
-                        _this.teams = _this.teams.concat(data.standings.E);
-                        _this.teams = _this.teams.concat(data.standings.F);
-                        _this.teams = _this.teams.concat(data.standings.G);
-                        _this.teams = _this.teams.concat(data.standings.H);
+                    app.Promises.getTeams(dataAccessService).then(function (teams) {
+                        _this.teams = teams;
                         console.log("Standings retrieved");
+                        return app.Promises.getGames(dataAccessService);
+                    }).then(function (data) {
+                        _this.games = data.fixtures;
+                        _this.combineFixData();
+                    }).catch(function (error) {
+                        _this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
+                        _this.combineFixData(true);
                     });
-                    _this.getGamesRaults(dataAccessService, _this.games);
                 });
                 app.Common.setButtonsReferences(this.price);
             }
-            TeamListCtrl.prototype.getGamesRaults = function (dataAccessService, games) {
-                var _this = this;
-                var gameResource = dataAccessService.getGameResource();
-                gameResource.get(function (data) {
-                    _this.games = data.fixtures;
-                }).$promise.then(function () {
-                    _this.combineFixData();
-                }).catch(function (error) {
-                    _this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
-                    _this.combineFixData(true);
-                });
-            };
             TeamListCtrl.prototype.combineFixData = function (replaceWholeFixData) {
                 var _this = this;
                 if (replaceWholeFixData === void 0) { replaceWholeFixData = false; }
-                var gameFixedResource = this.dataAccessService.getGameFixedResource(this.preferences.backupURL);
-                gameFixedResource.get(function (dataFixed) {
-                    if (replaceWholeFixData) {
-                        _this.games = dataFixed.fixtures;
-                    }
-                    else {
-                        var gamesFixed = dataFixed.fixtures;
-                        var fixingGames = _this.price >= 0;
-                        if (fixingGames) {
-                            app.Common.fixGames(gamesFixed, _this.games);
-                        }
-                    }
+                app.Promises.getFixGames(this.dataAccessService, this.preferences.backupURL).then(function (dataFixed) {
+                    _this.games = app.Common.getCombinedFixGames(_this.games, dataFixed, _this.price);
                     _this.games.forEach(function (game) {
                         if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "") {
                             var homeTeam = _this.teams.filter(function (team) {

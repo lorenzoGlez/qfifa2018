@@ -16,21 +16,27 @@ module app {
                             "2018-06-14T15:00:00Z", 
                             "TIMED", "Russia-XYZ", 
                             "SaudiArabia", "owner1","owner2", 
-                            {"goalsHomeTeam": 1 , "goalsAwayTeam": 0});
+                            {"goalsHomeTeam": 1 , "goalsAwayTeam": 0,
+                            "extraTime": {"goalsHomeTeam": 0 , "goalsAwayTeam": 0},
+                            "penaltyShootout": {"goalsHomeTeam": 0 , "goalsAwayTeam": 0}});
         games.push(game);
                         
         game = new app.Game({"href" : "http://api.football-data.org/v1/fixtures/165084"},
                             "2018-06-15T12:00:00Z", 
                             "TIMED", "Egypt", 
                             "SaudiArabiaUruguay",  "owner1","owner2",
-                            {"goalsHomeTeam": 2 , "goalsAwayTeam": 4});
+                            {"goalsHomeTeam": 2 , "goalsAwayTeam": 4,
+                            "extraTime": {"goalsHomeTeam": 0 , "goalsAwayTeam": 0},
+                            "penaltyShootout": {"goalsHomeTeam": 0 , "goalsAwayTeam": 0}});
         games.push(game);
 
         game = new app.Game({"href" : "http://api.football-data.org/v1/fixtures/165083"},
                             "2018-06-15T15:00:00Z", 
                             "TIMED", "Morocco", 
                             "Iran",  "owner1","owner2",
-                            {"goalsHomeTeam": null , "goalsAwayTeam": null});
+                            {"goalsHomeTeam": null , "goalsAwayTeam": null,
+                            "extraTime": {"goalsHomeTeam": 0 , "goalsAwayTeam": 0},
+                            "penaltyShootout": {"goalsHomeTeam": 0 , "goalsAwayTeam": 0}});
         games.push(game);
 
         var gameUrl = "/api/games";

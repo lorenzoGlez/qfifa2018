@@ -1,4 +1,5 @@
 module app.gameList{
+
     interface IGameModel{
         title: string;
         games: app.IGame[];
@@ -15,6 +16,7 @@ module app.gameList{
         preferences: app.IPreferences;
         price:  number;
         errorTextAlert: string = "";
+        
 
         static $inject=["$routeParams","dataAccessService"];
         constructor(private $routeParams: IGameParams, private dataAccessService: app.service.DataAccessService){
@@ -25,28 +27,19 @@ module app.gameList{
             
             this.price = Math.abs(this.price);
 
-            var preferencesResource = dataAccessService.getPreferencesResource();
-            preferencesResource.get((dataPreferences:app.IPreferences) =>{
-                this.preferences = dataPreferences;
-
-                var ownerResource = dataAccessService.getOwnerResource();
-                ownerResource.query((data:app.IOwner[]) =>{
-                    
-                    this.owners = data.filter((owner)=>{
-                        return owner.quiniela == this.price;
-                    });            
-
-                    var gameResource = dataAccessService.getGameResource();
-                    gameResource.get((data: app.IFixture) => {
-                        this.games = data.fixtures;
-                    }).$promise.then((value)=>{
-                        this.combineFixData();
-                    }).catch((error) => {
-                        this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
-                        this.combineFixData(true);
-                    });            
-                });
-            });
+            Promises.getPreferences(dataAccessService).then((data:app.IPreferences) =>{
+                this.preferences = data;
+                return Promises.getOwners(dataAccessService, this.price);
+            }).then((data:app.IOwner[]) =>{
+                this.owners = data;
+                return Promises.getGames(dataAccessService);
+            }).then((data:app.IFixture) => {
+                this.games = data.fixtures;
+                this.combineFixData();
+            }).catch((error) => {
+                this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
+                this.combineFixData(true);
+            });            
             Common.setButtonsReferences(this.price);
           
         }
@@ -54,16 +47,9 @@ module app.gameList{
         private combineFixData(replaceWholeFixData: boolean = false){
             var gameFixedResource = this.dataAccessService.getGameFixedResource(this.preferences.backupURL);
             gameFixedResource.get((dataFixed: app.IFixture) => {
-                if (replaceWholeFixData){
-                    this.games=dataFixed.fixtures;
-                }else{
-                    let gamesFixed = dataFixed.fixtures;
-                    let fixingGames: boolean = this.price >= 0;
+                this.games = Common.getCombinedFixGames(this.games, dataFixed, this.price);
 
-                    if(fixingGames){Common.fixGames(gamesFixed, this.games);}
-                }
-
-                this.games.forEach((game)=>{
+                this.games.filter((game)=>{return game.homeTeamName;}).forEach((game)=>{
                     game.awayOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.awayTeamName)>=0;})[0].ownerName;
                     game.homeOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.homeTeamName)>=0;})[0].ownerName;
                 })

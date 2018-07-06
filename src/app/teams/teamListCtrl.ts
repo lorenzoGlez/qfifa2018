@@ -33,54 +33,31 @@ module app.teamList{
             
             this.price = this.$routeParams.price ? this.$routeParams.price : 400;
 
-            var preferencesResource = dataAccessService.getPreferencesResource();
-            preferencesResource.get((dataPreferences:app.IPreferences) =>{
+            Promises.getPreferences(dataAccessService).then((dataPreferences:app.IPreferences) =>{
+
                 this.preferences = dataPreferences;
 
-                var teamResource = dataAccessService.getTeamResource();
-                teamResource.get((data: app.IStanding) => {
-                    this.teams = data.standings.A;
-                    this.teams = this.teams.concat(data.standings.B);
-                    this.teams = this.teams.concat(data.standings.C);
-                    this.teams = this.teams.concat(data.standings.D);
-                    this.teams = this.teams.concat(data.standings.E);
-                    this.teams = this.teams.concat(data.standings.F);
-                    this.teams = this.teams.concat(data.standings.G);
-                    this.teams = this.teams.concat(data.standings.H);
-                    console.log("Standings retrieved")
+                Promises.getTeams(dataAccessService).then((teams: ITeam[]) => {
+                    this.teams = teams;
+                    console.log("Standings retrieved");
+                    return Promises.getGames(dataAccessService);
+                }).then((data:IFixture) => {
+                    this.games = data.fixtures;
+                    this.combineFixData();
+                }).catch((error) => {
+                    this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
+                    this.combineFixData(true);
                 });
 
-                this.getGamesRaults(dataAccessService, this.games);
+
             });
             Common.setButtonsReferences(this.price);
-        }
-        
-
-        private getGamesRaults(dataAccessService: app.service.DataAccessService, games:app.IGame[]){
-            var gameResource = dataAccessService.getGameResource();
-            gameResource.get((data: app.IFixture) => {
-                this.games = data.fixtures;
-            }).$promise.then(()=>{
-                this.combineFixData();
-            }).catch((error) => {
-                this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
-                this.combineFixData(true);
-            });
-
-        }
+        }        
 
         private combineFixData(replaceWholeFixData: boolean = false){
-            var gameFixedResource = this.dataAccessService.getGameFixedResource(this.preferences.backupURL);
-            gameFixedResource.get((dataFixed: app.IFixture) => {
-                if (replaceWholeFixData){
-                    this.games=dataFixed.fixtures;
-                }else{
-                    let gamesFixed = dataFixed.fixtures;
-                    let fixingGames: boolean = this.price >= 0;
-
-                    if(fixingGames){Common.fixGames(gamesFixed, this.games);}
-                }
-
+            Promises.getFixGames(this.dataAccessService,this.preferences.backupURL).then((dataFixed: app.IFixture) =>{
+                this.games = Common.getCombinedFixGames(this.games, dataFixed, this.price);
+                
                 this.games.forEach((game) => {
                     if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "" ){
                         var homeTeam: app.ITeam = this.teams.filter((team) =>{

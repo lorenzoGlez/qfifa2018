@@ -3,6 +3,5 @@ module app{
         urlAPI: string;
         backupURL: string;
         headersAPI: {};
-        fitures:{};
     }
 }

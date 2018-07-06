@@ -49,7 +49,7 @@ module app{
             })[0].owner;
         }
         
-        static fixGames(gamesFixed: IGame[], games: IGame[]){
+        static getfixedGames(gamesFixed: IGame[], games: IGame[]){
             let gamesToFix = games.filter((game) => {return game.status != 'FINISHED' && game.status != 'SCHEDULED';});
             gamesFixed.filter((game) => {return game.status !='TIMED';})
                 .forEach((gameFix) => {
@@ -63,11 +63,26 @@ module app{
                                 if(gameFix.result.extraTime){ game.result.extraTime = gameFix.result.extraTime; }
                                 if(gameFix.result.penaltyShootout){ game.result.penaltyShootout = gameFix.result.penaltyShootout; }
                                 game.status = gameFix.status;
-                                i = games.length;
+                                i = gamesToFix.length;
                             }
                     }
 
                 });
+        }
+
+        static getCombinedFixGames(games: app.IGame[], fixGames: app.IFixture, price: number, replaceWholeFixData: boolean = false):app.IGame[]{
+            if (replaceWholeFixData){
+                return(fixGames.fixtures);
+            }else{
+                let gamesFixed = fixGames.fixtures;
+                let fixingGames: boolean = price >= 0;
+
+                if(fixingGames){
+                    Common.getfixedGames(gamesFixed, games);
+                    return games;
+                }
+            }
+
         }
 
     }

@@ -12,24 +12,18 @@ var app;
                 this.games = [];
                 this.price = this.$routeParams.price ? this.$routeParams.price : 400;
                 this.price = Math.abs(this.price);
-                var preferencesResource = dataAccessService.getPreferencesResource();
-                preferencesResource.get(function (dataPreferences) {
-                    _this.preferences = dataPreferences;
-                    var ownerResource = dataAccessService.getOwnerResource();
-                    ownerResource.query(function (data) {
-                        _this.owners = data.filter(function (owner) {
-                            return owner.quiniela == _this.price;
-                        });
-                        var gameResource = dataAccessService.getGameResource();
-                        gameResource.get(function (data) {
-                            _this.games = data.fixtures;
-                        }).$promise.then(function (value) {
-                            _this.combineFixData();
-                        }).catch(function (error) {
-                            _this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
-                            _this.combineFixData(true);
-                        });
-                    });
+                app.Promises.getPreferences(dataAccessService).then(function (data) {
+                    _this.preferences = data;
+                    return app.Promises.getOwners(dataAccessService, _this.price);
+                }).then(function (data) {
+                    _this.owners = data;
+                    return app.Promises.getGames(dataAccessService);
+                }).then(function (data) {
+                    _this.games = data.fixtures;
+                    _this.combineFixData();
+                }).catch(function (error) {
+                    _this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
+                    _this.combineFixData(true);
                 });
                 app.Common.setButtonsReferences(this.price);
             }
@@ -38,17 +32,8 @@ var app;
                 if (replaceWholeFixData === void 0) { replaceWholeFixData = false; }
                 var gameFixedResource = this.dataAccessService.getGameFixedResource(this.preferences.backupURL);
                 gameFixedResource.get(function (dataFixed) {
-                    if (replaceWholeFixData) {
-                        _this.games = dataFixed.fixtures;
-                    }
-                    else {
-                        var gamesFixed = dataFixed.fixtures;
-                        var fixingGames = _this.price >= 0;
-                        if (fixingGames) {
-                            app.Common.fixGames(gamesFixed, _this.games);
-                        }
-                    }
-                    _this.games.forEach(function (game) {
+                    _this.games = app.Common.getCombinedFixGames(_this.games, dataFixed, _this.price);
+                    _this.games.filter(function (game) { return game.homeTeamName; }).forEach(function (game) {
                         game.awayOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.awayTeamName) >= 0; })[0].ownerName;
                         game.homeOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.homeTeamName) >= 0; })[0].ownerName;
                     });

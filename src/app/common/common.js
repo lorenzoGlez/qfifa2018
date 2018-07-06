@@ -41,7 +41,7 @@ var app;
                 return team.team == teamName;
             })[0].owner;
         };
-        Common.fixGames = function (gamesFixed, games) {
+        Common.getfixedGames = function (gamesFixed, games) {
             var gamesToFix = games.filter(function (game) { return game.status != 'FINISHED' && game.status != 'SCHEDULED'; });
             gamesFixed.filter(function (game) { return game.status != 'TIMED'; })
                 .forEach(function (gameFix) {
@@ -59,10 +59,24 @@ var app;
                             game.result.penaltyShootout = gameFix.result.penaltyShootout;
                         }
                         game.status = gameFix.status;
-                        i = games.length;
+                        i = gamesToFix.length;
                     }
                 }
             });
+        };
+        Common.getCombinedFixGames = function (games, fixGames, price, replaceWholeFixData) {
+            if (replaceWholeFixData === void 0) { replaceWholeFixData = false; }
+            if (replaceWholeFixData) {
+                return (fixGames.fixtures);
+            }
+            else {
+                var gamesFixed = fixGames.fixtures;
+                var fixingGames = price >= 0;
+                if (fixingGames) {
+                    Common.getfixedGames(gamesFixed, games);
+                    return games;
+                }
+            }
         };
         return Common;
     }());
