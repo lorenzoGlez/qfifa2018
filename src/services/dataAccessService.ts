@@ -6,7 +6,7 @@ module app.service{
         getPreferencesResource(): ng.resource.IResourceClass<IPreferencesResource>;
     }
 
-    interface IGameResource extends ng.resource.IResource<IFixture>{}
+    interface IGameResource extends ng.resource.IResource<ICompetition>{}
 
     interface ITeamResource extends ng.resource.IResource<IStanding>{}
 
@@ -27,7 +27,7 @@ module app.service{
 
             getGameResource():ng.resource.IResourceClass<IGameResource>{
                 //return this.$resource("/api/games/:gameId");
-                return this.$resource("https://api.football-data.org/v1/competitions/467/fixtures",{},{
+                return this.$resource("https://api.football-data.org/v2/competitions/2000/matches",{},{
                     get:{method:'GET', headers: {"X-Auth-Token": "393287c72ec0479186e4aabc20caab86"}
                 }});
                 //return this.$resource("/src/app/games/games.json");

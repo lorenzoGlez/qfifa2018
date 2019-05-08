@@ -8,7 +8,7 @@ var app;
             }
             DataAccessService.prototype.getGameResource = function () {
                 //return this.$resource("/api/games/:gameId");
-                return this.$resource("https://api.football-data.org/v1/competitions/467/fixtures", {}, {
+                return this.$resource("https://api.football-data.org/v2/competitions/2000/matches", {}, {
                     get: { method: 'GET', headers: { "X-Auth-Token": "393287c72ec0479186e4aabc20caab86" }
                     }
                 });

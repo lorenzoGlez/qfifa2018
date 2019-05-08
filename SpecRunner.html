@@ -16,15 +16,36 @@
   <script src="lib/angular/angular-mocks.js"></script>
   <script src="lib/angular/angular-route.min.js"></script>
   <script src="lib/bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+  <script src="node_modules/chart.js/dist/Chart.min.js"></script>
+  <script src="node_modules/angular-chart.js/dist/angular-chart.min.js"></script>
   
 
-  <!-- include source files here... -->
-    <script src="src/app/games/gameListCtrl.js"></script>
-    <script src="src/services/dataAccessService.js"></script>
+    <!-- Application Script -->
     <script src="src/app.js"></script>
+    <script src="src/app/common/common.js"></script>
+    <script src="src/app/common/promises.js"></script>
 
-  <!-- include spec files here... -->
-  <script src="spec/app/gameCtrlSpec.js"></script>  
+    <!-- Domain Classes -->
+    <script src="src/app/games/game.js"></script>
+    <script src="src/app/teams/teams.js"></script>
+    <script src="src/app/owners/owner.js"></script>
+    <script src="src/app/common/preferences.js"></script>
+    
+    <!-- Services -->
+    <script src="src/services/dataAccessService.js"></script>
+    <script src="src/services/gameResourceMock.js"></script>
+    <script src="src/services/services.js"></script>
+    
+    <!-- Controllers -->
+    <script src="src/app/games/gameListCtrl.js"></script>
+    <script src="src/app/games/gameDetailCtrl.js"></script>
+
+    <script src="src/app/teams/teamListCtrl.js"></script>
+    <script src="src/app/owners/ownerListCtrl.js"></script>
+
+      <!-- include spec files here... -->
+  <script src="spec/service/data.spec.js"></script>  
 
 </head>
 

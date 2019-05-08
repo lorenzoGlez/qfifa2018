@@ -28,10 +28,10 @@ module app{
             });
         }
 
-        static getGames(dataAccessService: app.service.DataAccessService): Promise<app.IFixture>{
+        static getGames(dataAccessService: app.service.DataAccessService): Promise<app.ICompetition>{
             return new Promise((resolve, reject) => {
                 var gameResource = dataAccessService.getGameResource();
-                gameResource.get((data: app.IFixture) => {
+                gameResource.get((data: app.ICompetition) => {
                     resolve(data);
                 }).$promise.catch((reason) => {
                     reject(reason);
@@ -39,10 +39,10 @@ module app{
             });
         }
 
-        static getFixGames(dataAccessService: app.service.DataAccessService, backupURL: string): Promise<app.IFixture>{
+        static getFixGames(dataAccessService: app.service.DataAccessService, backupURL: string): Promise<app.ICompetition>{
             return new Promise((resolve, reject) => {
                 var gameFixedResource = dataAccessService.getGameFixedResource(backupURL);
-                gameFixedResource.get((dataFixed: app.IFixture) => {
+                gameFixedResource.get((dataFixed: app.ICompetition) => {
                         resolve(dataFixed);
                     }).$promise.catch((reason) => {
                         reject(reason);

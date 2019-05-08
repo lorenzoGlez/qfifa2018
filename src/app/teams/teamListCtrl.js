@@ -24,7 +24,7 @@ var app;
                         console.log("Standings retrieved");
                         return app.Promises.getGames(dataAccessService);
                     }).then(function (data) {
-                        _this.games = data.fixtures;
+                        _this.games = app.Common.convertMatchesToGames(data.matches);
                         _this.combineFixData();
                     }).catch(function (error) {
                         _this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
@@ -37,7 +37,8 @@ var app;
                 var _this = this;
                 if (replaceWholeFixData === void 0) { replaceWholeFixData = false; }
                 app.Promises.getFixGames(this.dataAccessService, this.preferences.backupURL).then(function (dataFixed) {
-                    _this.games = app.Common.getCombinedFixGames(_this.games, dataFixed, _this.price);
+                    var gamesFixed = app.Common.convertMatchesToGames(dataFixed.matches);
+                    _this.games = app.Common.getCombinedFixGames(_this.games, gamesFixed, _this.price);
                     _this.games.forEach(function (game) {
                         if (game.status != "TIMED" && game.homeTeamName != "" && game.homeTeamName != "") {
                             var homeTeam = _this.teams.filter(function (team) {

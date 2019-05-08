@@ -19,7 +19,7 @@ var app;
                     _this.owners = data;
                     return app.Promises.getGames(dataAccessService);
                 }).then(function (data) {
-                    _this.games = data.fixtures;
+                    _this.games = app.Common.convertMatchesToGames(data.matches);
                     _this.combineFixData();
                 }).catch(function (error) {
                     _this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
@@ -32,7 +32,8 @@ var app;
                 if (replaceWholeFixData === void 0) { replaceWholeFixData = false; }
                 var gameFixedResource = this.dataAccessService.getGameFixedResource(this.preferences.backupURL);
                 gameFixedResource.get(function (dataFixed) {
-                    _this.games = app.Common.getCombinedFixGames(_this.games, dataFixed, _this.price);
+                    var gamesFixed = app.Common.convertMatchesToGames(dataFixed.matches);
+                    _this.games = app.Common.getCombinedFixGames(_this.games, gamesFixed, _this.price);
                     _this.games.filter(function (game) { return game.homeTeamName; }).forEach(function (game) {
                         game.awayOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.awayTeamName) >= 0; })[0].ownerName;
                         game.homeOwner = _this.owners.filter(function (owner) { return owner.teams.indexOf(game.homeTeamName) >= 0; })[0].ownerName;

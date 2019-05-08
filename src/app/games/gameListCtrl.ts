@@ -33,8 +33,8 @@ module app.gameList{
             }).then((data:app.IOwner[]) =>{
                 this.owners = data;
                 return Promises.getGames(dataAccessService);
-            }).then((data:app.IFixture) => {
-                this.games = data.fixtures;
+            }).then((data:app.ICompetition) => {
+                this.games = Common.convertMatchesToGames(data.matches);
                 this.combineFixData();
             }).catch((error) => {
                 this.errorTextAlert = "La API de resultados esta fuera de servicio. Se usará último respaldo";
@@ -46,8 +46,9 @@ module app.gameList{
 
         private combineFixData(replaceWholeFixData: boolean = false){
             var gameFixedResource = this.dataAccessService.getGameFixedResource(this.preferences.backupURL);
-            gameFixedResource.get((dataFixed: app.IFixture) => {
-                this.games = Common.getCombinedFixGames(this.games, dataFixed, this.price);
+            gameFixedResource.get((dataFixed: app.ICompetition) => {
+                var gamesFixed = Common.convertMatchesToGames(dataFixed.matches);
+                this.games = Common.getCombinedFixGames(this.games, gamesFixed, this.price);
 
                 this.games.filter((game)=>{return game.homeTeamName;}).forEach((game)=>{
                     game.awayOwner = this.owners.filter((owner)=>{return owner.teams.indexOf(game.awayTeamName)>=0;})[0].ownerName;

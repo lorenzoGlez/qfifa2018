@@ -67,16 +67,32 @@ var app;
         Common.getCombinedFixGames = function (games, fixGames, price, replaceWholeFixData) {
             if (replaceWholeFixData === void 0) { replaceWholeFixData = false; }
             if (replaceWholeFixData) {
-                return (fixGames.fixtures);
+                return (fixGames);
             }
             else {
-                var gamesFixed = fixGames.fixtures;
                 var fixingGames = price >= 0;
                 if (fixingGames) {
-                    Common.getfixedGames(gamesFixed, games);
+                    Common.getfixedGames(fixGames, games);
                     return games;
                 }
             }
+        };
+        Common.convertMatchesToGames = function (matches) {
+            var convertedGames = [];
+            matches.forEach(function (match) {
+                var game = new app.Game();
+                game.awayTeamName = match.awayTeam.name;
+                game.date = match.utcDate;
+                game.getId = match.id.toString();
+                game.homeTeamName = match.homeTeam.name;
+                game.result = { goalsAwayTeam: match.score.fullTime.awayTeam,
+                    goalsHomeTeam: match.score.fullTime.homeTeam,
+                    extraTime: { goalsAwayTeam: 0, goalsHomeTeam: 0 },
+                    penaltyShootout: { goalsHomeTeam: 0, goalsAwayTeam: 0 } };
+                game.status = match.status;
+                convertedGames.push(game);
+            });
+            return convertedGames;
         };
         return Common;
     }());
